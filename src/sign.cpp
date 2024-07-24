@@ -36,7 +36,8 @@ std::map<std::string, uint64_t> addrMap = {
 	{"9.9.12-25234", 0xA84980},
 	{"9.9.12-25300", 0xA84980},
 	{"9.9.12-25493", 0xA996E0},
-	{"9.9.12-25765", 0xA9CE90}};
+	{"9.9.12-25765", 0xA9CE90},
+	{"9.9.12-26299", 0xA9E5B0}};
 #elif defined(_X86_ARCH_)
 std::map<std::string, uint64_t> addrMap = {
 	{"9.9.2-15962", 0x2BD70},
