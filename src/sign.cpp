@@ -46,8 +46,9 @@ std::map<std::string, uint64_t> addrMap = {
 	{"9.9.2-16183", 0x2BD70}};
 #elif defined(_ARM64_ARCH_)
 std::map<std::string, uint64_t> addrMap = {
-	{"3.2.7-23361", 0x351EC98}
-	{"6.9.20-17153", 0x1c73dd0}};
+	{"3.2.7-23361", 0x351EC98},
+	{"6.9.20-17153", 0x1c73dd0},
+	{"6.9.56-28418", 0x23510E8}};
 #endif
 
 int SignOffsets = 767; // 562 before 3.1.2-13107, 767 in others
