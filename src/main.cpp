@@ -34,6 +34,24 @@ void init()
     }
 #elif defined(_MAC_PLATFORM_)
     std::string version = "6.9.19-16183";
+    try
+    {
+        std::ifstream versionConfig("/Applications/QQ.app/Contents/resources/app/package.json");
+        if (versionConfig.is_open())
+        {
+            std::stringstream versionConfigStrBuf;
+            versionConfigStrBuf << versionConfig.rdbuf();
+            versionConfig.close();
+            rapidjson::Document doc;
+            doc.Parse(versionConfigStrBuf.str().c_str(), versionConfigStrBuf.str().size());
+            if (doc.HasMember("version") && doc["version"].IsString())
+                version = doc["version"].GetString();
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 #elif defined(_LINUX_PLATFORM_)
     std::string version = "3.2.9-24815";
     try
@@ -141,12 +159,12 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
     return TRUE;
 }
 #elif defined(_LINUX_PLATFORM_) || defined(_MAC_PLATFORM_)
-void __attribute__((constructor)) my_init(void)
+static void __attribute__((constructor)) my_init(void)
 {
     init();
 }
 
-void __attribute__((destructor)) my_fini(void)
+static void __attribute__((destructor)) my_fini(void)
 {
     uninit();
 }

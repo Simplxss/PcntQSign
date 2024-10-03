@@ -48,8 +48,8 @@ void Server::Init()
         .Get("/sign", [this](const httplib::Request &req, httplib::Response &res)
              {
             try {
-                std::string_view cmd = req.get_param_value("cmd");
-                std::string_view src = req.get_param_value("src");
+                std::string cmd = req.get_param_value("cmd");
+                std::string src = req.get_param_value("src");
                 int seq = std::stoi(req.get_param_value("seq"));
 
                 std::string buffer = GetSign(cmd, src, seq);

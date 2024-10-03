@@ -51,6 +51,7 @@ jobs:
             load.js
             start.sh
             start.bat
+            start.command
 
   ubuntu:
     name: run on ${{ matrix.os }}(${{ matrix.arch }})
@@ -93,3 +94,48 @@ jobs:
             load.js
             start.sh
             start.bat
+            start.command
+
+
+  macos:
+    name: run on ${{ matrix.os }}(${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+        arch: [x64, arm64]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup cmake
+        uses: lukka/get-cmake@latest
+
+      - name: Build project
+        uses: lukka/run-cmake@v10
+        with:
+          # This is the default path to the CMakeLists.txt along side the
+          # CMakePresets.json. Change if you need have CMakeLists.txt and CMakePresets.json
+          # located elsewhere.
+          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+  
+          # This is the name of the CMakePresets.json's configuration to use to generate
+          # the project files. This configuration leverages the vcpkg.cmake toolchain file to
+          # run vcpkg and install all dependencies specified in vcpkg.json.
+          configurePreset: 'ninja'
+          
+          # This is the name of the CMakePresets.json's configuration to build the project.
+          buildPreset: 'ninja-release'
+
+      - run: mv build/ninja/libSignerServer.dylib libSignerServer.dylib
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: SignerServer-${{ matrix.os }}-${{ matrix.arch }}
+          path: |
+            libSignerServer.dylib 
+            load.js
+            start.sh
+            start.bat
+            start.command
