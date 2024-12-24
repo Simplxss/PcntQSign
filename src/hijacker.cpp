@@ -1,5 +1,4 @@
 #if defined(_WIN_PLATFORM_)
-#include "run_as_node.h"
 
 // bool TlsOnce = false;
 // // this runs way before dllmain

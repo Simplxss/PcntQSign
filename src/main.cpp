@@ -15,8 +15,8 @@ void init()
         TCHAR pathm[MAX_PATH];
         GetModuleFileName(NULL, pathm, MAX_PATH);
         std::filesystem::path path = pathm;
-        path = path.parent_path().append("resources\\app\\versions\\config.json");
-        std::ifstream versionConfig(path.wstring());
+        path = path.parent_path().append("versions\\config.json");
+        std::ifstream versionConfig(path);
         if (versionConfig.is_open())
         {
             std::stringstream versionConfigStream;
@@ -138,6 +138,7 @@ void init()
 
 void uninit()
 {
+
 }
 
 #if defined(_WIN_PLATFORM_)

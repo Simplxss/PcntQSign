@@ -7,7 +7,7 @@ project(SignerServer)
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
     add_definitions(-D _WIN_PLATFORM_)
 
-    link_libraries(ws2_32)
+    link_libraries(ws2_32 psapi)
 elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
     add_definitions(-D _MAC_PLATFORM_)
 elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")

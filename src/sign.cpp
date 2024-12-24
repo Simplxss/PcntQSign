@@ -6,9 +6,13 @@
 #include <stdexcept>
 
 #if defined(_WIN_PLATFORM_)
-#include <Windows.h>
-#elif defined(_LINUX_PLATFORM_) || defined(_MAC_PLATFORM_)
-#include "../include/moehoo/proc_maps.h"
+#define PSAPI_VERSION 1
+#include <windows.h>
+#include <psapi.h>
+#elif defined(_LINUX_PLATFORM_)
+#include <dlfcn.h>
+#include <link.h>
+#include <string.h>
 #endif
 
 typedef int (*SignFunctionType)(const char *cmd, const unsigned char *src, size_t src_len, int seq, unsigned char *result);
@@ -56,6 +60,35 @@ int SignOffsets = 767; // 562 before 3.1.2-13107, 767 in others
 int ExtraOffsets = 511;
 int TokenOffsets = 255;
 
+uint64_t Rva2Addr(uint64_t rva)
+{
+#if defined(_LINUX_PLATFORM_)
+	uint64_t baseAddress = 0;
+
+	dl_iterate_phdr([](struct dl_phdr_info *info, size_t size, void *data)
+					{
+        if (strstr(info->dlpi_name, "wrapper.node") != nullptr) {
+			*(uint64_t *)data = (uint64_t)info->dlpi_addr;
+			return 1;
+        }
+        return 0; }, (void *)&baseAddress);
+
+	if (baseAddress)
+		return baseAddress + rva;
+
+#elif defined(_WIN_PLATFORM_)
+	HMODULE wrapperModule = GetModuleHandleW(L"wrapper.node");
+	MODULEINFO modInfo;
+	if (wrapperModule != NULL && GetModuleInformation(GetCurrentProcess(), wrapperModule, &modInfo, sizeof(MODULEINFO)))
+		return reinterpret_cast<uint64_t>(modInfo.lpBaseOfDll) + rva;
+
+#elif defined(_MAC_PLATFORM_)
+	// todo
+
+#endif
+	return 0;
+}
+
 std::vector<uint8_t> Hex2Bin(std::string_view str)
 {
 	if (str.length() % 2 != 0)
@@ -88,38 +121,10 @@ std::string Bin2Hex(const uint8_t *ptr, size_t length)
 
 bool Sign::Init(const std::string &version)
 {
-	uint64_t HookAddress = 0;
-#if defined(_WIN_PLATFORM_)
-	HMODULE wrapperModule = GetModuleHandleW(L"wrapper.node");
-	if (wrapperModule == NULL)
-		throw std::runtime_error("Can't find wrapper.node module");
-	HookAddress = reinterpret_cast<uint64_t>(wrapperModule) + addrMap[version];
-	printf("HookAddress: %llx\n", HookAddress);
-#elif defined(_MAC_PLATFORM_)
-	auto pmap = hak::get_maps();
-	do
-	{
-		if (pmap->module_name.find("wrapper.node") != std::string::npos && pmap->offset == 0)
-		{
-			HookAddress = pmap->start() + addrMap[version];
-			printf("HookAddress: %llx\n", HookAddress);
-			break;
-		}
-	} while ((pmap = pmap->next()) != nullptr);
-#elif defined(_LINUX_PLATFORM_)
-	auto pmap = hak::get_maps();
-	do
-	{
-		if (pmap->module_name.find("wrapper.node") != std::string::npos && pmap->offset == 0)
-		{
-			HookAddress = pmap->start() + addrMap[version];
-			printf("HookAddress: %lx\n", HookAddress);
-			break;
-		}
-	} while ((pmap = pmap->next()) != nullptr);
-#endif
+	uint64_t HookAddress = Rva2Addr(addrMap[version]);
 	if (HookAddress == 0)
 		throw std::runtime_error("Can't find hook address");
+		
 	SignFunction = reinterpret_cast<SignFunctionType>(HookAddress);
 	return true;
 }
