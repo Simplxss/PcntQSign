@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 set(CMAKE_CXX_STANDARD 17)
 
-project(SignerServer)
+project(PcntQSign)
 
 # 平台宏定义
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
@@ -24,4 +24,4 @@ endif()
 
 file(GLOB SOURCE_FILES "./src/*.cpp")
 
-add_library(SignerServer SHARED ${SOURCE_FILES})
+add_library(PcntQSign SHARED ${SOURCE_FILES})

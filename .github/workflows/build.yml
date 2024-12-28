@@ -40,18 +40,15 @@ jobs:
           # This is the name of the CMakePresets.json's configuration to build the project.
           buildPreset: 'msvc-${{ matrix.arch }}-release'
 
-      - run: mv build/msvc-${{ matrix.arch }}/Release/SignerServer.dll SignerServer.dll
+      - run: mv build/msvc-${{ matrix.arch }}/Release/PcntQSign.dll PcntQSign.dll
 
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: SignerServer-${{ matrix.os }}-${{ matrix.arch }}
+          name: PcntQSign-${{ matrix.os }}-${{ matrix.arch }}
           path: |
-            SignerServer.dll
-            load.js
-            start.sh
+            PcntQSign.dll
             start.bat
-            start.command
 
   ubuntu:
     name: run on ${{ matrix.os }}(${{ matrix.arch }})
@@ -83,18 +80,16 @@ jobs:
           # This is the name of the CMakePresets.json's configuration to build the project.
           buildPreset: 'ninja-release'
 
-      - run: mv build/ninja/libSignerServer.so libSignerServer.so
+      - run: mv build/ninja/libPcntQSign.so libPcntQSign.so
 
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: SignerServer-${{ matrix.os }}-${{ matrix.arch }}
+          name: PcntQSign-${{ matrix.os }}-${{ matrix.arch }}
           path: |
-            libSignerServer.so 
-            load.js
+            libPcntQSign.so 
+            loadSign.js
             start.sh
-            start.bat
-            start.command
 
 
   macos:
@@ -127,15 +122,13 @@ jobs:
           # This is the name of the CMakePresets.json's configuration to build the project.
           buildPreset: 'ninja-release'
 
-      - run: mv build/ninja/libSignerServer.dylib libSignerServer.dylib
+      - run: mv build/ninja/libPcntQSign.dylib libPcntQSign.dylib
 
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: SignerServer-${{ matrix.os }}-${{ matrix.arch }}
+          name: PcntQSign-${{ matrix.os }}-${{ matrix.arch }}
           path: |
-            libSignerServer.dylib 
-            load.js
-            start.sh
-            start.bat
+            libPcntQSign.dylib 
+            loadSign.js
             start.command

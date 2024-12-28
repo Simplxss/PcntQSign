@@ -1,4 +1,9 @@
 #!/bin/bash
-SCRIPT_DIR=$(realpath $(dirname "${BASH_SOURCE[0]}"))
-export ELECTRON_RUN_AS_NODE=1
-LD_PRELOAD=./libSignerServer.so /opt/QQ/qq ${SCRIPT_DIR}/load.js $@
+
+cp "./libPcntQSign.so" "/opt/QQ/resources/app"
+cp "./loadSign.js" "/opt/QQ/resources/app"
+
+jq '.main = "./loadSign.js"' "/opt/QQ/resources/app/package.json" > "./package.json"
+mv "./package.json" "/opt/QQ/resources/app/package.json"
+
+xvfb-run qq --enable-logging --no-sandbox

@@ -27,6 +27,7 @@ std::map<std::string, uint64_t> addrMap = {
 	{"3.2.7-23361", 0x4C93C57},
 	{"3.2.9-24815", 0x4E5D3B7},
 	{"3.2.10-25765", 0x4F176D6},
+	{"3.2.15-30899", 0x620C4D0},
 	// Macos
 	{"6.9.19-16183", 0x1B29469},
 	// Windows
@@ -47,11 +48,14 @@ std::map<std::string, uint64_t> addrMap = {
 	{"9.9.17-30899", 0xC32C50}};
 #elif defined(_X86_ARCH_)
 std::map<std::string, uint64_t> addrMap = {
+	// Windows
 	{"9.9.2-15962", 0x2BD70},
 	{"9.9.2-16183", 0x2BD70}};
 #elif defined(_ARM64_ARCH_)
 std::map<std::string, uint64_t> addrMap = {
+	// Linux
 	{"3.2.7-23361", 0x351EC98},
+	// Macos
 	{"6.9.20-17153", 0x1c73dd0},
 	{"6.9.56-28418", 0x23510E8}};
 #endif

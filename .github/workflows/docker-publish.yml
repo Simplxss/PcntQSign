@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_REPO: simplxs/signerserver
-  GITHUB_REPO: Simplxss/SignerServer
+  DOCKER_REPO: simplxs/PcntQSign
+  GITHUB_REPO: Simplxss/PcntQSign
 
 jobs:
   build:

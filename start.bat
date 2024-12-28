@@ -15,8 +15,8 @@ for %%a in ("!RetString!") do (
 )
 
 if not exist "%pathWithoutUninstall%dbghelp.dll" (
-    if not exist %~dp0SignerServer.dll (
-        echo SignerServer.dll not found
+    if not exist %~dp0PcntQSign.dll (
+        echo PcntQSign.dll not found
         pause
         exit
     )
@@ -29,7 +29,7 @@ if not exist "%pathWithoutUninstall%dbghelp.dll" (
 )
 
 :copydll
-copy /y "%~dp0SignerServer.dll" "%pathWithoutUninstall%dbghelp.dll"
+copy /y "%~dp0PcntQSign.dll" "%pathWithoutUninstall%dbghelp.dll"
 if errorlevel 1 (
     set /p Choice="Copy error, do you want to attempt to running as administrator?(Y/N):"
     if /i "!Choice!"=="Y" goto restart
@@ -44,7 +44,6 @@ exit
 
 :launch
 set "QQPath=!pathWithoutUninstall!QQ.exe"
-set ELECTRON_RUN_AS_NODE=1
 
 echo Launching QQ
-"!QQPath!" "%~dp0load.js" %*
+"!QQPath!"

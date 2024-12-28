@@ -3,20 +3,22 @@ const os = require('node:os');
 
 const exePath = path.dirname(process.execPath);
 
-let QQWrapper, version, appid, qua;
+let QQWrapper, SignServer, version, appid, qua;
 
 if (os.platform() === "win32") {
     const versionConfig = require(path.join(exePath, "resources/app/versions/config.json"));
     version = versionConfig.curVersion;
     QQWrapper = require(path.join(exePath, "resources/app/versions", version, "wrapper.node"));
-    appid = "537226655"; // 9.9.12-25234
+    SignServer = require(path.join(exePath, "resources/app/versions", version, "libPcntQSign.so"));
+    appid = "537263796"; // 9.9.17-30899
     qua = `V1_WIN_NQ_${version.replace("-", "_")}_GW_B`;
 } else {
     const qqPkgInfo = require(path.join(exePath, "resources/app/package.json"));
     QQWrapper = require(path.join(exePath, "resources/app/wrapper.node"));
+    SignServer = require(path.join(exePath, "resources/app/libPcntQSign.so"));
     version = qqPkgInfo.version;
-    appid = "537226441";
-    qua = qqPkgInfo.qua;
+    appid = "537263831"; // 3.2.15-30899
+    qua = `V1_LNX_NQ_${version.replace("-", "_")}_GW_B`;
 }
 
 class GlobalAdapter {
@@ -38,7 +40,7 @@ class GlobalAdapter {
     }
 }
 
-const dataPathGlobal = "/root"
+const dataPathGlobal = path.join(exePath, "data");
 
 const engine = new QQWrapper.NodeIQQNTWrapperEngine();
 engine.initWithDeskTopConfig({
@@ -64,3 +66,7 @@ loginService.initConfig({
     clientVer: version,
     hostName: os.hostname()
 });
+
+
+const module = { exports: {} };
+process.dlopen(module, SignServer, os.constants.dlopen.RTLD_NOW);

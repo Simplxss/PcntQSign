@@ -26,9 +26,9 @@ jobs:
 
       - name: Zip Artifact
         run: |
-          zip -r SignerServer-windows-x64.zip SignerServer-windows-latest-x64.zip/*
-          zip -r SignerServer-ubuntu-x64.zip SignerServer-ubuntu-latest-x64.zip/*
-          zip -r SignerServer-ubuntu-arm64.zip SignerServer-ubuntu-latest-arm64.zip/*
+          zip -r PcntQSign-windows-x64.zip PcntQSign-windows-latest-x64.zip/*
+          zip -r PcntQSign-ubuntu-x64.zip PcntQSign-ubuntu-latest-x64.zip/*
+          zip -r PcntQSign-ubuntu-arm64.zip PcntQSign-ubuntu-latest-arm64.zip/*
       
       - name: Create Release Draft and Upload Artifacts
         uses: softprops/action-gh-release@v2
@@ -36,6 +36,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           body_path: CHANGELOG.md
           files: |
-            SignerServer-windows-x64.zip
-            SignerServer-ubuntu-x64.zip
-            SignerServer-ubuntu-arm64.zip
+            PcntQSign-windows-x64.zip
+            PcntQSign-ubuntu-x64.zip
+            PcntQSign-ubuntu-arm64.zip
